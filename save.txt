@@ -1,0 +1,12 @@
+nev
+lol sziasztok hetfotol vasarnapig nyitva
+1222
+1212222
+veg;keee;csip;
+kolbi;sajt;kutyafasza;
+nag;kisfasz;nagyfasz;
+csip:1;keee:0;veg:0;
+kolbi:veg,keee,csip,;kutyafasza:keee,;sajt:veg,csip,;
+kolbi:22;kutyafasza:1;sajt:1254;
+kisfasz:kutyafasza,kolbi,;nag:kolbi,sajt,;nagyfasz:kutyafasza,sajt,;
+kisfasz:csip,keee,;nag:veg,csip,;nagyfasz:csip,;

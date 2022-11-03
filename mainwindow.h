@@ -34,6 +34,10 @@ private slots:
 
     void pizzacheck();
 
+    void on_actionMentes_triggered();
+
+    void on_actionMegnyitas_triggered();
+
 private:
     Ui::MainWindow *ui;
     QStringList cimkek;

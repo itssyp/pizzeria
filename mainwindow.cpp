@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 #include <iostream>
 #include <QDebug>
+#include "QFileDialog"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -117,7 +118,7 @@ void MainWindow::pizzacheck()
                     qInfo()<<"chip" << *it3;
                 }else if (pizzatmp.find(*it3)!=pizzatmp.end()){
                     pizzatmp2<<*it3;
-                    qInfo("choop");
+                    qInfo("chop");
                 }
             }
             if (it2!=it.value().begin()){
@@ -129,3 +130,82 @@ void MainWindow::pizzacheck()
             pizzacimkek[it.key()]<<i;
     }
 }
+
+void MainWindow::on_actionMentes_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Mentes"), "/users/sheep/Documents/Qt/Pizzeria", tr("*.txt"));
+    QFile f(fileName);
+    if(f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    QTextStream out(&f);
+    out << ui->lineEdit_5->text() << "\n" << ui->lineEdit_6->text() << "\n"
+        << ui->lineEdit_7->text() << "\n" << ui->lineEdit_8->text() << "\n";
+    for (auto i:cimkek) out << i << ";";
+    out << "\n";
+    for (auto i:feltetek) out << i << ";";
+    out << "\n";
+    for (auto i:pizzak) out << i << ";";
+    out << "\n";
+    for (auto it=cimkektul.begin();it!=cimkektul.end();it++) {
+        out << it.key() << ":" << it.value() << ";";
+    }
+    out << "\n";
+    for (auto it=feltetektul.begin();it!=feltetektul.end();it++) {
+        out << it.key() << ":";
+        for (auto it2=it.value().begin();it2!=it.value().end();it2++){
+            out << *it2 << ",";
+        }
+        out << ";";
+    }
+    out << "\n";
+    for (auto it=feltetekar.begin();it!=feltetekar.end();it++) {
+        out << it.key() << ":" << it.value() << ";";
+    }
+    out << "\n";
+    for (auto it=pizzaktul.begin();it!=pizzaktul.end();it++) {
+        out << it.key() << ":";
+        for (auto it2=it.value().begin();it2!=it.value().end();it2++){
+            out << *it2 << ",";
+        }
+        out << ";";
+    }
+    out << "\n";
+    for (auto it=pizzacimkek.begin();it!=pizzacimkek.end();it++) {
+        out << it.key() << ":";
+        for (auto it2=it.value().begin();it2!=it.value().end();it2++){
+            out << *it2 << ",";
+        }
+        out << ";";
+    }
+    out << "\n";
+
+    }
+}
+
+
+void MainWindow::on_actionMegnyitas_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Megnyitas"), "/users/sheep/Documents/Qt/Pizzeria", tr("*.txt"));
+    QFile f(fileName);
+    if(f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    QTextStream in(&f);
+    ui->lineEdit_5->setText(in.readLine());
+    ui->lineEdit_6->setText(in.readLine());
+    ui->lineEdit_7->setText(in.readLine());
+    ui->lineEdit_8->setText(in.readLine());
+    std::stringstream ss(in.readLine().toStdString());
+    std::string s;
+    while (std::getline(ss,s,';')) cimkek << QString::fromLocal8Bit(s.c_str());
+    //std::getline(ss,s);
+    //qInfo() << QString::fromLocal8Bit(s.c_str());
+    ss.clear();
+    ss << in.readLine().toStdString();
+    while (std::getline(ss,s,';')) feltetek << QString::fromLocal8Bit(s.c_str());
+    ss.clear();
+    ss << in.readLine().toStdString();
+    while (std::getline(ss,s,';')) pizzak << QString::fromLocal8Bit(s.c_str());
+
+    }
+}
+
