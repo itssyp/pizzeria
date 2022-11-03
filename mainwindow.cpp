@@ -196,16 +196,79 @@ void MainWindow::on_actionMegnyitas_triggered()
     ui->lineEdit_8->setText(in.readLine());
     std::stringstream ss(in.readLine().toStdString());
     std::string s;
+    char c;
     while (std::getline(ss,s,';')) cimkek << QString::fromLocal8Bit(s.c_str());
-    //std::getline(ss,s);
-    //qInfo() << QString::fromLocal8Bit(s.c_str());
+    ss.str("");
     ss.clear();
     ss << in.readLine().toStdString();
     while (std::getline(ss,s,';')) feltetek << QString::fromLocal8Bit(s.c_str());
+    ss.str("");
     ss.clear();
     ss << in.readLine().toStdString();
     while (std::getline(ss,s,';')) pizzak << QString::fromLocal8Bit(s.c_str());
-
+    ss.str("");
+    ss.clear();
+    ss << in.readLine().toStdString();
+    while (std::getline(ss,s,':')){
+        bool b;
+        ss >> b;
+        cimkektul[QString::fromLocal8Bit(s.c_str())]=b;
+        ss >> c;
     }
+    ss.str("");
+    ss.clear();
+    ss << in.readLine().toStdString();
+    while (std::getline(ss,s,';')){
+        std::stringstream ss2(s);
+        std::string tmp;
+        std::getline(ss2,tmp,':');
+        qInfo()<< QString::fromLocal8Bit(tmp.c_str());
+        while (std::getline(ss2,s,',')){
+             feltetektul[QString::fromLocal8Bit(tmp.c_str())]<<QString::fromLocal8Bit(s.c_str());
+        }
+    }
+    ss.str("");
+    ss.clear();
+    ss << in.readLine().toStdString();
+    while (std::getline(ss,s,':')){
+        int a;
+        ss >> a;
+        cimkektul[QString::fromLocal8Bit(s.c_str())]=a;
+        ss >> c;
+    }
+    ss.str("");
+    ss.clear();
+    ss << in.readLine().toStdString();
+    while (std::getline(ss,s,';')){
+        std::stringstream ss2(s);
+        std::string tmp;
+        std::getline(ss2,tmp,':');
+        qInfo()<< QString::fromLocal8Bit(tmp.c_str());
+        while (std::getline(ss2,s,',')){
+             pizzaktul[QString::fromLocal8Bit(tmp.c_str())]<<QString::fromLocal8Bit(s.c_str());
+        }
+    }
+    ss.str("");
+    ss.clear();
+    ss << in.readLine().toStdString();
+    while (std::getline(ss,s,';')){
+        std::stringstream ss2(s);
+        std::string tmp;
+        std::getline(ss2,tmp,':');
+        qInfo()<< QString::fromLocal8Bit(tmp.c_str());
+        while (std::getline(ss2,s,',')){
+             pizzacimkek[QString::fromLocal8Bit(tmp.c_str())]<<QString::fromLocal8Bit(s.c_str());
+        }
+    }
+    }
+    QStringListModel *model = new QStringListModel();
+    model->setStringList(cimkek);
+    ui->listView->setModel(model);
+    model = new QStringListModel();
+    model->setStringList(feltetek);
+    ui->listView_2->setModel(model);
+    model = new QStringListModel();
+    model->setStringList(pizzak);
+    ui->listView_4->setModel(model);
 }
 
