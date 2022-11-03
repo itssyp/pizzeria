@@ -117,7 +117,7 @@ void MainWindow::pizzacheck()
                     qInfo()<<"chip" << *it3;
                 }else if (pizzatmp.find(*it3)!=pizzatmp.end()){
                     pizzatmp2<<*it3;
-                    qInfo("chop");
+                    qInfo("choop");
                 }
             }
             if (it2!=it.value().begin()){
