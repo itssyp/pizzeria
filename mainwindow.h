@@ -38,6 +38,8 @@ private slots:
 
     void on_actionMegnyitas_triggered();
 
+    void on_comboBox_activated(int index);
+
 private:
     Ui::MainWindow *ui;
     QStringList cimkek;

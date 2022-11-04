@@ -26,6 +26,11 @@ void MainWindow::on_pushButton_clicked()
     model->setStringList(cimkek);
     ui->listView->setModel(model);
     ui->lineEdit->clear();
+    model = new QStringListModel();
+    QStringList tmp=cimkek;
+    tmp << "Minden";
+    model->setStringList(tmp);
+    ui->comboBox->setModel(model);
 }
 
 
@@ -185,6 +190,14 @@ void MainWindow::on_actionMentes_triggered()
 
 void MainWindow::on_actionMegnyitas_triggered()
 {
+    cimkek.clear();
+    feltetek.clear();
+    pizzak.clear();
+    cimkektul.clear();
+    feltetektul.clear();
+    feltetekar.clear();
+    pizzaktul.clear();
+    pizzacimkek.clear();
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Megnyitas"), "/users/sheep/Documents/Qt/Pizzeria", tr("*.txt"));
     QFile f(fileName);
@@ -270,5 +283,31 @@ void MainWindow::on_actionMegnyitas_triggered()
     model = new QStringListModel();
     model->setStringList(pizzak);
     ui->listView_4->setModel(model);
+    model = new QStringListModel();
+    QStringList tmp=cimkek;
+    tmp << "Minden";
+    model->setStringList(tmp);
+    ui->comboBox->setModel(model);
+}
+
+
+void MainWindow::on_comboBox_activated(int index)
+{
+    QStringListModel *model = new QStringListModel();
+    QStringList tmp;
+    if (ui->comboBox->currentText()=="Minden"){
+        tmp=feltetek;
+    } else
+    for (auto i: feltetek){
+        QSet<QString> tmp2;
+        for (auto j: feltetektul[i]){
+            tmp2<<j;
+        }
+        if (tmp2.find(ui->comboBox->currentText())!=tmp2.end())
+            tmp << i;
+    }
+    model->setStringList(tmp);
+    ui->listView_2->setModel(model);
+
 }
 
