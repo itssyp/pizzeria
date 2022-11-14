@@ -3,6 +3,7 @@
 #include <iostream>
 #include <QDebug>
 #include "QFileDialog"
+#include "QErrorMessage"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -19,7 +20,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    if (ui->lineEdit->text()=="") return;
+    if (ui->lineEdit->text()=="") {
+       QErrorMessage *msg= new QErrorMessage;
+       msg->showMessage("Baz");
+
+       return;
+    }
     QStringListModel *model = new QStringListModel();
     cimkektul[ui->lineEdit->text()]=ui->checkBox->isChecked();
     cimkek<<ui->lineEdit->text();
@@ -36,14 +42,21 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    if (ui->lineEdit_2->text()=="" || ui->lineEdit_3->text()=="") return;
+    if (ui->lineEdit_2->text()=="" || ui->lineEdit_3->text()=="") {
+        QErrorMessage *msg= new QErrorMessage;
+        msg->showMessage("Baz");
+        return;
+    }
     QStringListModel *model = new QStringListModel();
     feltetek<<ui->lineEdit_2->text();
     feltetekar[ui->lineEdit_2->text()]=int(ui->lineEdit_3->text().toInt());
-    model->setStringList(feltetek);
+    model->setStringList(convert(feltetek));
     ui->listView_2->setModel(model);
     ui->lineEdit_2->clear();
     ui->lineEdit_3->clear();
+    model = new QStringListModel();
+    model->setStringList(prices());
+    ui->listView_7->setModel(model);
 
 }
 
@@ -61,7 +74,11 @@ void MainWindow::on_pushButton_3_clicked()
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    if (ui->lineEdit_4->text()=="") return;
+    if (ui->lineEdit_4->text()=="") {
+        QErrorMessage *msg= new QErrorMessage;
+        msg->showMessage("Baz");
+        return;
+    }
     QStringListModel *model = new QStringListModel();
     pizzak<<ui->lineEdit_4->text();
     model->setStringList(pizzak);
@@ -120,10 +137,8 @@ void MainWindow::pizzacheck()
                     pizzacimkek[it.key()]<<*it3;
                 }else if (it2==it.value().begin()){
                     pizzatmp<<*it3;
-                    qInfo()<<"chip" << *it3;
                 }else if (pizzatmp.find(*it3)!=pizzatmp.end()){
                     pizzatmp2<<*it3;
-                    qInfo("chop");
                 }
             }
             if (it2!=it.value().begin()){
@@ -235,7 +250,6 @@ void MainWindow::on_actionMegnyitas_triggered()
         std::stringstream ss2(s);
         std::string tmp;
         std::getline(ss2,tmp,':');
-        qInfo()<< QString::fromLocal8Bit(tmp.c_str());
         while (std::getline(ss2,s,',')){
              feltetektul[QString::fromLocal8Bit(tmp.c_str())]<<QString::fromLocal8Bit(s.c_str());
         }
@@ -246,8 +260,9 @@ void MainWindow::on_actionMegnyitas_triggered()
     while (std::getline(ss,s,':')){
         int a;
         ss >> a;
-        cimkektul[QString::fromLocal8Bit(s.c_str())]=a;
+        feltetekar[QString::fromLocal8Bit(s.c_str())]=a;
         ss >> c;
+        qInfo() << QString::fromLocal8Bit(s.c_str()) << " " << a;
     }
     ss.str("");
     ss.clear();
@@ -256,7 +271,6 @@ void MainWindow::on_actionMegnyitas_triggered()
         std::stringstream ss2(s);
         std::string tmp;
         std::getline(ss2,tmp,':');
-        qInfo()<< QString::fromLocal8Bit(tmp.c_str());
         while (std::getline(ss2,s,',')){
              pizzaktul[QString::fromLocal8Bit(tmp.c_str())]<<QString::fromLocal8Bit(s.c_str());
         }
@@ -268,7 +282,6 @@ void MainWindow::on_actionMegnyitas_triggered()
         std::stringstream ss2(s);
         std::string tmp;
         std::getline(ss2,tmp,':');
-        qInfo()<< QString::fromLocal8Bit(tmp.c_str());
         while (std::getline(ss2,s,',')){
              pizzacimkek[QString::fromLocal8Bit(tmp.c_str())]<<QString::fromLocal8Bit(s.c_str());
         }
@@ -278,7 +291,7 @@ void MainWindow::on_actionMegnyitas_triggered()
     model->setStringList(cimkek);
     ui->listView->setModel(model);
     model = new QStringListModel();
-    model->setStringList(feltetek);
+    model->setStringList(convert(feltetek));
     ui->listView_2->setModel(model);
     model = new QStringListModel();
     model->setStringList(pizzak);
@@ -288,6 +301,9 @@ void MainWindow::on_actionMegnyitas_triggered()
     tmp << "Minden";
     model->setStringList(tmp);
     ui->comboBox->setModel(model);
+    model = new QStringListModel();
+    model->setStringList(prices());
+    ui->listView_7->setModel(model);
 }
 
 
@@ -295,19 +311,106 @@ void MainWindow::on_comboBox_activated(int index)
 {
     QStringListModel *model = new QStringListModel();
     QStringList tmp;
+    QStringList tmp3;
     if (ui->comboBox->currentText()=="Minden"){
-        tmp=feltetek;
+        tmp=convert(feltetek);
+        model->setStringList(tmp);
+        ui->listView_2->setModel(model);
+        for (auto it=feltetek.begin();it!= feltetek.end();it++){
+            tmp3 << QString::number(feltetekar[*it]);
+        }
+        model = new QStringListModel();
+        model->setStringList(tmp3);
+        ui->listView_7->setModel(model);
+        return;
     } else
     for (auto i: feltetek){
         QSet<QString> tmp2;
         for (auto j: feltetektul[i]){
             tmp2<<j;
         }
-        if (tmp2.find(ui->comboBox->currentText())!=tmp2.end())
+        if (tmp2.find(ui->comboBox->currentText())!=tmp2.end()){
             tmp << i;
+            tmp3 << QString::number(feltetekar[i]);
+        }
     }
     model->setStringList(tmp);
     ui->listView_2->setModel(model);
+    model = new QStringListModel();
+    model->setStringList(tmp3);
+    ui->listView_7->setModel(model);
 
+}
+
+QStringList MainWindow::prices(){
+    QStringList price;
+    for(auto it=feltetek.begin();it!=feltetek.end();it++){
+        price<< QString::number(feltetekar[*it]);
+    }
+    return price;
+}
+
+int MainWindow::pizzaar(QString pizza){
+    int sum=ui->lineEdit_7->text().toInt();
+    QSet<QString> tmp;
+    for (auto i:pizzaktul[pizza]){
+        tmp << i;
+    }
+    for (auto it=feltetekar.begin();it!= feltetekar.end(); it++){
+        if (tmp.find(it.key())!=tmp.end()) sum+=feltetekar[it.key()];
+        qInfo()<< it.key() << ": " << it.value() << "\n";
+    }
+    qInfo () << sum;
+    return sum;
+}
+
+QStringList MainWindow::convert(QSet<QString> st){
+    QStringList tmp;
+    for (auto i:st) tmp << i;
+    return tmp;
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    QFile f("index.html");
+    qInfo("hi");
+    if (f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+       QTextStream out(&f);
+       out << "<!DOCTYPE html\n"
+           << "<html>\n"
+           << "<body>\n"
+           << "<h1>"
+           << ui->lineEdit_5->text()
+           << "</h1>\n"
+           << "<p>"
+           << "Nyitvatartas: "
+           << ui->lineEdit_6->text()
+           << "</p>"
+           << "<p>"
+           << "Szallitasi koltseg: "
+           << ui->lineEdit_7->text()+"jmf"
+           << "</p>"
+           << "<p>"
+           << "<bold>"
+           << "Etlap:\n<br>"
+           << "</bold>";
+       for (auto it=pizzaktul.begin();it!=pizzaktul.end();it++){
+           out << it.key() +":\n <br>";
+           for (auto it2=it.value().begin(); it2!=it.value().end();it2++){
+               out << *it2 << " - " << feltetekar[*it2] << "jmf \n <br>";
+           }
+           out << "Ar: " << pizzaar(it.key());
+           out << "\n <br>";
+           for (auto it2=pizzacimkek[it.key()].begin(); it2!=pizzacimkek[it.key()].end();it2++){
+               out << *it2 << ", ";
+           }
+           out << "\n <br><br>";
+       }
+
+       out << "</p>"
+
+           << "</body>"
+           << "</html>";
+    }
 }
 

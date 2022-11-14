@@ -40,10 +40,18 @@ private slots:
 
     void on_comboBox_activated(int index);
 
+    QStringList prices();
+
+    int pizzaar(QString pizza);
+
+    QStringList convert (QSet<QString> st);
+
+    void on_pushButton_6_clicked();
+
 private:
     Ui::MainWindow *ui;
     QStringList cimkek;
-    QStringList feltetek;
+    QSet<QString> feltetek;
     QStringList pizzak;
     QMap<QString,bool> cimkektul;
     QMap<QString,QStringList> feltetektul;

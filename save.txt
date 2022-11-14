@@ -7,6 +7,6 @@ Kolbi;Sajt;Kukorica;
 Magyaros;kisfasz;nagyfasz;
 Csipos:1;Allergen:1;Vegan:0;
 Kolbi:Vegan,Allergen,Csipos,;Kukorica:Allergen,;Sajt:Vegan,Csipos,;
-Kolbi:22;Kukorica:1;Sajt:1254;
+Kolbi:11;Kukorica:33;Sajt:22;
 kisfasz:Kukorica,Kolbi,;Magyaros:Kolbi,Sajt,;nagyfasz:Kukorica,Sajt,;
 kisfasz:Csipos,Allergen,;Magyaros:Vegan,Csipos,;nagyfasz:Csipos,;
